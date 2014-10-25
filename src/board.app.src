@@ -5,7 +5,10 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  lager,
+                  cowboy,
+                  eredis
                  ]},
   {mod, { board_app, []}},
   {env, []}
