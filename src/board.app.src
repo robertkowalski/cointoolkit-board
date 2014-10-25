@@ -1,0 +1,12 @@
+{application, board,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { board_app, []}},
+  {env, []}
+ ]}.
