@@ -20,3 +20,6 @@ run: quick
 	if [ -n "${NODE}" ]; then ${RUN} -name ${NODE}@`hostname` -s ${NODE}; \
 	else ${RUN} -s ${NODE}; \
 	fi
+
+eunit: quick
+	ERL_FLAGS="-config test/eunit" rebar eunit
