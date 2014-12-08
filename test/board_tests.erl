@@ -4,12 +4,14 @@
 
 setup() ->
     {ok, RedisPort} = application:get_env(board, redis_port),
+    {ok, HttpPort} = application:get_env(board, http_port),
+    Url = lists:concat(["http://localhost:", HttpPort, "/"]),
     {ok, RedisClient} = eredis:start_link("localhost", RedisPort),
     KeyValuePairs = [<<"kraken">>, <<"value1">>],
     {ok, <<"OK">>} = eredis:q(RedisClient, [<<"MSET">> | KeyValuePairs]),
-    RedisClient.
+    {RedisClient, Url}.
 
-teardown(RedisClient) ->
+teardown({RedisClient, Url}) ->
     eredis:stop(RedisClient),
     ok.
 
@@ -21,14 +23,22 @@ board_test_() ->
             foreach,
             fun setup/0, fun teardown/1,
             [
-                fun redis_should_run/1
+                fun redis_should_run/1,
+                fun the_board_should_reply_hello_world/1
             ]
         }
     }.
 
-redis_should_run(RedisClient) ->
+redis_should_run({RedisClient, _}) ->
     ?_assertEqual([<<"value1">>],
         begin
             {ok, Values} = eredis:q(RedisClient, [<<"MGET">> | [<<"kraken">>]]),
             Values
+        end).
+
+the_board_should_reply_hello_world({_, Url}) ->
+    ?_assertEqual("Hello world!",
+        begin
+            {ok, _Status, _Header, Content} = ibrowse:send_req(Url, [], get),
+            Content
         end).
