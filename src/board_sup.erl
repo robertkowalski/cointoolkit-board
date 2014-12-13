@@ -23,5 +23,7 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, []} }.
-
+    Children = [
+        {board_web, {board_web, start, []}, permanent, brutal_kill, worker, [board_web]}
+    ],
+    {ok, { {one_for_one, 5, 10}, Children} }.

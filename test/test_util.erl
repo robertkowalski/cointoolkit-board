@@ -4,8 +4,9 @@
 
 start_board() ->
     ibrowse:start(),
-    board:start().
+    board_app:start().
 
 stop_board(_) ->
+    board_app:stop(),
     ibrowse:stop(),
-    board:stop().
+    ok.

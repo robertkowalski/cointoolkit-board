@@ -1,5 +1,6 @@
 NODE ?= "board"
-REBAR ?= "rebar"
+APPNAME ?= "board_app"
+REBAR=`which rebar || ./rebar`
 CONFIG ?= "priv/app.config"
 
 RUN := erl -pa ebin -pa deps/*/ebin -smp enable -s lager -boot start_sasl -config ${CONFIG} ${ERL_ARGS}
@@ -17,8 +18,8 @@ quick_clean:
 	${REBAR} skip_deps=true clean
 
 run: quick
-	if [ -n "${NODE}" ]; then ${RUN} -name ${NODE}@`hostname` -s ${NODE}; \
-	else ${RUN} -s ${NODE}; \
+	if [ -n "${NODE}" ]; then ${RUN} -name ${NODE}@`hostname` -s ${APPNAME}; \
+	else ${RUN} -s ${APPNAME}; \
 	fi
 
 eunit: quick

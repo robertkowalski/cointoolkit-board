@@ -5,21 +5,23 @@
 %% Application callbacks
 -export([start/2, stop/1]).
 
+-export([start/0, stop/0]).
+
+start() ->
+    application:ensure_all_started(board).
+
+stop() ->
+    application:stop(cowboy),
+    application:stop(ranch),
+    application:stop(lager),
+    application:stop(board).
+
+
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    Dispatch = cowboy_router:compile([
-        {'_', [
-            {"/", hello_world_handler, []}
-        ]}
-    ]),
-    {ok, Port} = application:get_env(http_port),
-    {ok, ListenerCount} = application:get_env(http_listener_count),
-    {ok, _} = cowboy:start_http(http, ListenerCount, [{port, Port}], [
-        {env, [{dispatch, Dispatch}]}
-    ]),
     board_sup:start_link().
 
 stop(_State) ->

@@ -1,4 +1,4 @@
--module(board_tests).
+-module(board_web_tests).
 -include_lib("eunit/include/eunit.hrl").
 
 
@@ -11,7 +11,7 @@ setup() ->
     {ok, <<"OK">>} = eredis:q(RedisClient, [<<"MSET">> | KeyValuePairs]),
     {RedisClient, Url}.
 
-teardown({RedisClient, Url}) ->
+teardown({RedisClient, _Url}) ->
     eredis:stop(RedisClient),
     ok.
 
