@@ -39,6 +39,6 @@ redis_should_run({RedisClient, _}) ->
 the_board_should_reply_hello_world({_, Url}) ->
     ?_assertEqual("Hello world!",
         begin
-            {ok, _Status, _Header, Content} = ibrowse:send_req(Url, [], get),
+            {ok, _Status, _Header, Content} = board_request:request(Url),
             Content
         end).
