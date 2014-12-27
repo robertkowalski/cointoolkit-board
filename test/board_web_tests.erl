@@ -4,9 +4,10 @@
 
 setup() ->
     {ok, RedisPort} = application:get_env(board, redis_port),
+    {ok, RedisHost} = application:get_env(board, redis_host),
     {ok, HttpPort} = application:get_env(board, http_port),
     Url = lists:concat(["http://localhost:", HttpPort, "/"]),
-    {ok, RedisClient} = eredis:start_link("localhost", RedisPort),
+    {ok, RedisClient} = eredis:start_link(RedisHost, RedisPort),
     KeyValuePairs = [<<"kraken">>, <<"value1">>],
     {ok, <<"OK">>} = eredis:q(RedisClient, [<<"MSET">> | KeyValuePairs]),
     {RedisClient, Url}.
