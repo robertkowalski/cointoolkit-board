@@ -24,3 +24,5 @@ run: quick
 
 eunit: quick
 	ERL_FLAGS="-config test/eunit" rebar eunit
+
+test: quick_clean eunit
