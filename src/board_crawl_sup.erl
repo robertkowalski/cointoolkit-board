@@ -1,4 +1,4 @@
--module(board_sup).
+-module(board_crawl_sup).
 
 -behaviour(supervisor).
 
@@ -24,7 +24,8 @@ start_link() ->
 
 init([]) ->
     Children = [
-        {board_crawl_sup, {board_crawl_sup, start_link, []}, permanent, 10500, supervisor, [board_crawl_sup]},
-        {board_web, {board_web, start, []}, permanent, brutal_kill, worker, [board_web]}
+        {board_crawl_worker,
+          {board_crawl_worker, start_link, [board_get_kraken, [ltc, btc], "kraken"]},
+            permanent, brutal_kill, worker, [board_crawl_worker]}
     ],
     {ok, { {one_for_one, 5, 10}, Children} }.
