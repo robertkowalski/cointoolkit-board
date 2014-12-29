@@ -22,6 +22,7 @@ board_test_() ->
         fun setup/0, fun teardown/1,
         [
             fun it_should_get_values/1,
+            fun it_should_get_multiple_values/1,
             fun it_should_set_values/1
         ]
     }.
@@ -31,6 +32,15 @@ it_should_get_values({_}) ->
     ?_assertEqual([<<"value1">>],
         begin
             {Status, Value} = board_data:get(<<"kraken">>),
+            Value
+        end).
+
+it_should_get_multiple_values({RedisClient}) ->
+    ?_assertEqual([<<"value1">>, <<"value2">>],
+        begin
+            KeyValuePairs = [<<"kraken">>, <<"value1">>, <<"octocoin">>, <<"value2">>],
+            {ok, <<"OK">>} = eredis:q(RedisClient, [<<"MSET">> | KeyValuePairs]),
+            {Status, Value} = board_data:get([<<"kraken">>, <<"octocoin">>]),
             Value
         end).
 

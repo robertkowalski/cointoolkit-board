@@ -16,8 +16,10 @@ start_link(Host, Port) ->
 set(Key, Value) ->
     gen_server:call(?MODULE, {save, Key, Value}).
 
-get(Key) ->
-    gen_server:call(?MODULE, {get, Key}).
+get(Keys) when is_list(Keys) ->
+    gen_server:call(?MODULE, {get, Keys});
+get(Keys) ->
+    gen_server:call(?MODULE, {get, [Keys]}).
 
 stop() ->
     gen_server:call(?MODULE, terminate).
@@ -27,8 +29,8 @@ init([Host, Port]) ->
     {ok, Client} = eredis:start_link(Host, Port),
     {ok, Client}.
 
-handle_call({get, Key}, _From, Client) ->
-    Response = eredis:q(Client, [<<"MGET">> | [Key]]),
+handle_call({get, Keys}, _From, Client) ->
+    Response = eredis:q(Client, [<<"MGET">> | Keys]),
     {reply, Response, Client};
 handle_call({save, Key, Value}, _From, Client) ->
     KeyValuePairs = [Key, Value],
