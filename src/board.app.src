@@ -9,8 +9,11 @@
                   ssl,
                   lager,
                   cowboy,
-                  eredis
+                  eredis,
+                  ibrowse,
+                  jiffy
                  ]},
   {mod, { board_app, []}},
+  {modules, []},
   {env, []}
  ]}.
