@@ -16,7 +16,7 @@ start_link(M, Coins, Service) ->
     {ok, RedisPort} = application:get_env(board, redis_port),
     {ok, RedisHost} = application:get_env(board, redis_host),
     board_data:start_link(RedisHost, RedisPort),
-    gen_server:start_link(?MODULE, [M, Coins, Service], []).
+    gen_server:start_link({local, list_to_atom(Service)}, ?MODULE, [M, Coins, Service], []).
 
 close(_) ->
     ok.
@@ -40,6 +40,9 @@ handle_info(Msg, State) ->
     io:format("Unexpected message: ~p~n", [Msg]),
     {noreply, State, ?DELAY}.
 
+terminate({invalid_json, Content}, Args) ->
+    io:format("bad_return_value -- ~p ~p ~n", [Args, Content]),
+    ok;
 terminate(normal, _State) ->
     ok.
 

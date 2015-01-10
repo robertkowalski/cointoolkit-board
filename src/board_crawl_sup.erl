@@ -23,9 +23,13 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
+
     Children = [
-        {board_crawl_worker,
+        {board_crawl_worker_kraken,
           {board_crawl_worker, start_link, [board_get_kraken, [ltc, btc], "kraken"]},
+            permanent, brutal_kill, worker, [board_crawl_worker]},
+        {board_crawl_worker_bitfinex,
+          {board_crawl_worker, start_link, [board_get_bitfinex, [ltc, btc], "bitfinex"]},
             permanent, brutal_kill, worker, [board_crawl_worker]}
     ],
     {ok, { {one_for_one, 5, 10}, Children} }.

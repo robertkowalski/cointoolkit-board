@@ -4,8 +4,10 @@
 
 request(Url, parsed) ->
     {ok, Status, Header, Content} = request(Url),
-    ParsedContent = jiffy:decode(Content, [return_maps]),
-    {ok, Status, Header, ParsedContent}.
+    case catch jiffy:decode(Content, [return_maps]) of
+        {error, {1, invalid_json}} -> exit({invalid_json, Content});
+        ParsedContent -> {ok, Status, Header, ParsedContent}
+    end.
 
 request(Url) ->
     case code:is_loaded(ibrowse) of
