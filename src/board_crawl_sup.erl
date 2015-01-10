@@ -30,6 +30,9 @@ init([]) ->
             permanent, brutal_kill, worker, [board_crawl_worker]},
         {board_crawl_worker_bitfinex,
           {board_crawl_worker, start_link, [board_get_bitfinex, [ltc, btc], "bitfinex"]},
+            permanent, brutal_kill, worker, [board_crawl_worker]},
+        {board_crawl_worker_btce,
+          {board_crawl_worker, start_link, [board_get_btce, [ltc, btc], "btce"]},
             permanent, brutal_kill, worker, [board_crawl_worker]}
     ],
     {ok, { {one_for_one, 5, 10}, Children} }.
