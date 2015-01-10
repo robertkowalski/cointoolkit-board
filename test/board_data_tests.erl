@@ -3,6 +3,7 @@
 
 
 setup() ->
+    application:load(board),
     {ok, RedisPort} = application:get_env(board, redis_port),
     {ok, RedisHost} = application:get_env(board, redis_host),
     board_data:start_link(RedisHost, RedisPort),
@@ -31,7 +32,7 @@ board_test_() ->
 it_should_get_values({_}) ->
     ?_assertEqual([<<"value1">>],
         begin
-            {Status, Value} = board_data:get(<<"kraken">>),
+            {_Status, Value} = board_data:get(<<"kraken">>),
             Value
         end).
 
@@ -40,7 +41,7 @@ it_should_get_multiple_values({RedisClient}) ->
         begin
             KeyValuePairs = [<<"kraken">>, <<"value1">>, <<"octocoin">>, <<"value2">>],
             {ok, <<"OK">>} = eredis:q(RedisClient, [<<"MSET">> | KeyValuePairs]),
-            {Status, Value} = board_data:get([<<"kraken">>, <<"octocoin">>]),
+            {ok, Value} = board_data:get([<<"kraken">>, <<"octocoin">>]),
             Value
         end).
 
